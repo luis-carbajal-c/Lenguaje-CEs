@@ -5,7 +5,7 @@ prueba*/
 entero main(sin_tipo) {
     entero prueba; /*declaracion de variable*/
     prueba = 345; /*asignacion de valor a la variable*/
-    retorno prueba; /*retorno de la funcion*/
+    retorno 0; /*retorno de la funcion*/
 }
 
-/*caracter invalido*/ ~
+~ /*caracter invalido*/
