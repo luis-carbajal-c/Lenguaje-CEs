@@ -3,6 +3,8 @@
 
 using namespace std;
 
+// separar terminales en flex (relop, addop, mulop)
+
 int main() {
     FlexLexer* lexer = new yyFlexLexer;
 

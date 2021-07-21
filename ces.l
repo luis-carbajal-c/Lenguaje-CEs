@@ -3,7 +3,12 @@
     using namespace std;
     int mylineno = 1;
 
-    enum yytokentype {
+    #include "heading.h"
+    #include "tok.h"
+    extern "C" int yylex();
+    int yyerror(char *s);
+
+    /*enum yytokentype {
         keyword = 1,
         num = 2,
         id = 3,
@@ -20,7 +25,7 @@
         comma = 14,
         eos = 15,
         error = 100
-    };
+    };*/
 %}
 
 %option noyywrap c++
