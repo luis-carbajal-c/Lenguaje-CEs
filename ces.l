@@ -1,8 +1,4 @@
 %{
-    #include <iostream>
-    using namespace std;
-    int mylineno = 1;
-
     #include "heading.h"
     #include "tok.h"
     extern "C" int yylex();
@@ -28,76 +24,82 @@
     };*/
 %}
 
-%option noyywrap c++
+%option yylineno
 
 ws      [ \t]+
-
-keyword entero|retorno|sin_tipo|mientras|si|sino|main
 alpha   [A-Za-z]
 digit   [0-9]
 id      ({alpha})({alpha})*
 number  ({digit})({digit})*
-addop   "+"|"-"
-mulop   "*"|"/"
-relop   "<"|"<="|">"|">="|"=="|"!="
 
 %%
 
 {ws}    /* skip blanks and tabs */
 
-"/*"    {
-        int c;
+[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/] {/*comment*/}
 
-        while((c = yyinput()) != 0)
-            {
-            if(c == '\n')
-                ++mylineno;
+\n          {/*newline*/}
 
-            else if(c == '*')
-                {
-                if((c = yyinput()) == '/')
-                    break;
-                else
-                    unput(c);
-                }
-            }
-        }
+"entero"    {return ENTERO;}
 
-{keyword}   return keyword;
+"sin_tipo"  {return SIN_TIPO;}
 
-{number}    return num;
+"retorno"   {return RETORNO;}
 
-{id}        return id;
+"mientras"  {return MIENTRAS;}
 
-\n          mylineno++;
+"si"        {return SI;}
 
-{addop}     return add;
+"sino"      {return SINO;}
 
-{mulop}     return mul;
+"main"      {return MAIN;}
 
-{relop}     return rel;
+{number}    {return NUM;}
 
-"="         return assign;
+{id}        {return ID;}
 
-"("         return par_beg;
+"+"         {return SUM;}
 
-")"         return par_end;
+"-"         {return SUB;}
 
-"["         return sbr_beg;
+"*"         {return MUL;}
 
-"]"         return sbr_end;
+"/"         {return DIV;}
 
-"{"         return cbr_beg;
+"<"         {return LT;}
 
-"}"         return cbr_end;
+"<="        {return LEQ;}
 
-","         return comma;
+">"         {return GT;}
 
-";"         return eos;
+">="        {return GEQ;}
+
+"=="        {return EQ;}
+
+"!="        {return NEQ;}
+
+"="         {return ASSIGN;}
+
+"("         {return PAR_BEG;}
+
+")"         {return PAR_END;}
+
+"["         {return COR_BEG;}
+
+"]"         {return COR_END;}
+
+"{"         {return LLA_BEG;}
+
+"}"         {return LLA_END;}
+
+","         {return COMMA;}
+
+";"         {return EOS;}
 
 .           {
-                printf("Error en la linea %i. Caracter '%s' invalido\n", mylineno, YYText()); 
-                return error;
+                //printf("Error en la linea %i. Caracter '%s' invalido\n", yylineno, YYText()); 
+                yyerror("lexic error");
+                exit(1);
             }
 
 %%

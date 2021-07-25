@@ -12,7 +12,7 @@ lex.o:		lex.c
 
 lex.c:		ces.l 
 		flex ces.l
-		cp lex.yy.cc lex.c
+		cp lex.yy.c lex.c
 
 bison.o:	bison.c
 		$(CC) $(CFLAGS) -c bison.c -o bison.o
