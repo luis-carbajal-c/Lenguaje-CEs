@@ -26,7 +26,6 @@ number  {digit}+
 "mientras"  {yylval.op_val = new std::string(yytext); return MIENTRAS;}
 "si"        {yylval.op_val = new std::string(yytext); return SI;}
 "sino"      {yylval.op_val = new std::string(yytext); return SINO;}
-"main"      {yylval.op_val = new std::string(yytext); return MAIN;}
 
 "+"         {yylval.op_val = new std::string(yytext); return SUM;}
 "-"         {yylval.op_val = new std::string(yytext); return SUB;}
