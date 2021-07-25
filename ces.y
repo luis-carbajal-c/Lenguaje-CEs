@@ -100,17 +100,105 @@ sent_compuesta:
     ;
 
 declaracion_local:
-    declaracion_local var_declaracion
-    | /*empty*/
+    /*empty*/
+    | declaracion_local var_declaracion
     ;
 
 lista_sentencias:
-    lista_sentencias sentencia
-    | /*empty*/
+    /*empty*/
+    | lista_sentencias sentencia
     ;
 
 sentencia:
-    
+    sentencia_expresion 
+    | sentencia_seleccion
+    | sentencia_iteracion
+    | sentencia_retorno
+    ;
+
+sentencia_expresion:
+    expresion EOS
+    | EOS
+    ;
+
+sentencia_seleccion:
+    SI PAR_BEG expresion PAR_END sentencia
+    | SI PAR_BEG expresion PAR_END sentencia SINO sentencia
+    ;
+
+sentencia_iteracion:
+    MIENTRAS PAR_BEG expresion PAR_END LLA_BEG lista_sentencias LLA_END
+    ;
+
+sentencia_retorno:
+    RETORNO EOS
+    | RETORNO expresion EOS
+    ;
+
+expresion:
+    var ASSIGN expresion
+    | expresion_simple
+    ;
+
+var:
+    ID
+    | ID COR_BEG expresion COR_END
+    ;
+
+expresion_simple:
+    expresion_aditiva relop expresion_aditiva
+    | expresion_aditiva
+    ;
+
+relop:
+    LT
+    | LEQ
+    | GT
+    | GEQ
+    | EQ
+    | NEQ
+    ;
+
+expresion_aditiva:
+    expresion_aditiva addop term
+    | term
+    ;
+
+addop:
+    SUM
+    | SUB
+    ;
+
+term:
+    term mulop factor
+    | factor
+    ;
+
+mulop:
+    MUL
+    | DIV
+    ;
+
+factor:
+    PAR_BEG expresion PAR_END 
+    | var
+    | call
+    | NUM
+    ;
+
+call:
+    ID PAR_BEG args PAR_END
+    ;
+
+args:
+    /*empty*/
+    | lista_arg
+    ;
+
+lista_arg:
+    lista_arg COMMA expresion
+    | expresion
+    ;
 
 %%
 
