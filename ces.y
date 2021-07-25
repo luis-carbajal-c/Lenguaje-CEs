@@ -47,8 +47,8 @@
 %token <int_val>    NUM
 %token <id_val>     ID
 
-%left PLUS
-%left MULT
+//%left PLUS
+//%left MULT
 
 %%
 
@@ -71,13 +71,16 @@ var_declaracion:
     | ENTERO ID COR_BEG NUM COR_END EOS
     ;
 
+/*
 tipo:
     ENTERO
     | SIN_TIPO
     ;
+*/
 
 fun_declaracion:
-    tipo ID PAR_BEG params PAR_END sent_compuesta
+    ENTERO ID PAR_BEG params PAR_END sent_compuesta
+    | SIN_TIPO ID PAR_BEG params PAR_END sent_compuesta
     ;
 
 params:
@@ -91,8 +94,8 @@ lista_params:
     ;
 
 param:
-    tipo ID
-    | tipo ID COR_BEG COR_END
+    ENTERO ID
+    | ENTERO ID COR_BEG COR_END
     ;
 
 sent_compuesta:
