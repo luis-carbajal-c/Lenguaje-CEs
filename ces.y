@@ -8,6 +8,7 @@
 %union{
     int		int_val;
     string* op_val;
+    string* id_val;
 }
 
 %start	input 
@@ -19,18 +20,19 @@
 %token <op_val>     SI
 %token <op_val>     SINO
 %token <op_val>     MAIN
-%token <int_val>    NUM
-%token <op_val>     ID
+
 %token <op_val>     SUM
 %token <op_val>     SUB
 %token <op_val>     MUL
 %token <op_val>     DIV
+
 %token <op_val>     LT
 %token <op_val>     LEQ
 %token <op_val>     GT
 %token <op_val>     GEQ
 %token <op_val>     EQ
 %token <op_val>     NEQ
+
 %token <op_val>     ASSIGN
 %token <op_val>     PAR_BEG
 %token <op_val>     PAR_END
@@ -40,6 +42,9 @@
 %token <op_val>     LLA_END
 %token <op_val>     COMMA
 %token <op_val>     EOS
+
+%token <int_val>    NUM
+%token <id_val>     ID
 
 %left	PLUS
 %left	MULT
@@ -58,8 +63,8 @@ exp:    ID
 
 int yyerror(string s)
 {
-    extern int yylineno;	// defined and maintained in lex.c
-    extern char *yytext;	// defined and maintained in lex.c
+    extern int yylineno;
+    extern char *yytext;
     
     cerr << "ERROR: " << s << " at symbol \"" << yytext;
     cerr << "\" on line " << yylineno << endl;

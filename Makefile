@@ -29,4 +29,4 @@ lex.o bison.o main.o	: heading.h
 lex.o main.o			: tok.h
 
 clean:
-	rm -f *.o *~ lex.c lex.yy.cc bison.c tok.h ces.tab.c ces.tab.h ces.output ces
+	rm -f *.o *~ lex.c lex.yy.c bison.c tok.h ces.tab.c ces.tab.h ces.output ces
