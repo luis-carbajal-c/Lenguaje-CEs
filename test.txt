@@ -30,4 +30,4 @@ entero main(sin_tipo) {
     retorno 0;                  /*retorno de la funcion*/
 }
 
-~ /*caracter invalido*/
+~ /*caracter invalido, error lexico*/

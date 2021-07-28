@@ -3,6 +3,36 @@
     #include "heading.h"
     int yyerror(char *s);
     extern "C" int yylex();
+
+    struct type_val{
+        int type;
+        int val;
+    };
+
+    struct SymbolTable {
+        queue<map<string, type_val> > tables;
+
+        SymbolTable() {
+            tables.push(map<string, type_val>());
+        }
+
+        void insert_symbol(string id, type_val val) {
+            map<string, type_val> &current = tables.front();
+            current.insert(pair<string, type_val>(id, val));
+        }
+
+        bool search_symbol(string id) {
+            map<string, type_val> &current = tables.front();
+            return current.find(id) != current.end();
+        }
+
+        void update_symbol(string id, type_val new_val) {
+            map<string, type_val> &current = tables.front();
+            current[id] = new_val;
+        }
+    };
+
+    SymbolTable symbolTable;
 %}
 
 %union{
