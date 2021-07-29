@@ -4,30 +4,48 @@
     int yyerror(char *s);
     extern "C" int yylex();
 
-    struct type_val{
-        int type;
+    enum IDType {
+        func,
+        var
+    };
+
+    enum FType {
+        sin_tipo,
+        entero
+    };
+
+    enum VType {
+        simple,
+        arreglo
+    };
+
+    struct attr{
+        IDType idtype;
+        FType ftype;
+        VType vtype;
+        int asize;
         int val;
     };
 
     struct SymbolTable {
-        stack<map<string, type_val> > tables;
+        stack<map<string, attr> > tables;
 
         SymbolTable() {
-            tables.push(map<string, type_val>());
+            tables.push(map<string, attr>());
         }
 
-        void insert_symbol(string id, type_val val) {
-            map<string, type_val> &current = tables.top();
-            current.insert(pair<string, type_val>(id, val));
+        void insert_symbol(string id, attr val) {
+            map<string, attr> &current = tables.top();
+            current.insert(pair<string, attr>(id, val));
         }
 
         bool search_symbol(string id) {
-            map<string, type_val> &current = tables.top();
+            map<string, attr> &current = tables.top();
             return current.find(id) != current.end();
         }
 
-        void update_symbol(string id, type_val new_val) {
-            map<string, type_val> &current = tables.top();
+        void update_symbol(string id, attr new_val) {
+            map<string, attr> &current = tables.top();
             current[id] = new_val;
         }
     };
@@ -97,7 +115,15 @@ declaracion:
     ;
 
 var_declaracion:
-    ENTERO ID EOS
+    ENTERO ID EOS {
+        if (!symbolTable.search_symbol(*$2)) {
+            attr a;
+            a.idtype = var;
+            a.vtype = simple;
+            symbolTable.insert_symbol(*$2, a);
+        }
+        else yyerror("Simbolo ya definido");
+    }
     | ENTERO ID COR_BEG NUM COR_END EOS
     ;
 
