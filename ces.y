@@ -2,6 +2,7 @@
 %{
     #include "heading.h"
     int yyerror(char *s);
+    int error_symbol(string s, string symbol);
     extern "C" int yylex();
 
     enum IDType {
@@ -122,9 +123,18 @@ var_declaracion:
             a.vtype = simple;
             symbolTable.insert_symbol(*$2, a);
         }
-        else yyerror("Simbolo ya definido");
+        else error_symbol("Symbol already defined", *$2);
     }
-    | ENTERO ID COR_BEG NUM COR_END EOS
+    | ENTERO ID COR_BEG NUM COR_END EOS {
+        if (!symbolTable.search_symbol(*$2)) {
+            attr a;
+            a.idtype = var;
+            a.vtype = arreglo;
+            a.asize = $4;
+            symbolTable.insert_symbol(*$2, a);
+        }
+        else error_symbol("Symbol already defined", *$2);
+    }
     ;
 
 /*
@@ -261,8 +271,7 @@ lista_arg:
 
 %%
 
-int yyerror(string s)
-{
+int yyerror(string s) {
     extern int yylineno;
     extern char *yytext;
     
@@ -271,7 +280,15 @@ int yyerror(string s)
     exit(1);
 }
 
-int yyerror(char *s)
-{
+int yyerror(char *s) {
     return yyerror(string(s));
+}
+
+int error_symbol(string s, string symbol) {
+    extern int yylineno;
+    extern char *yytext;
+    
+    cerr << "ERROR: " << s << " at symbol \"" << symbol;
+    cerr << "\" on line " << yylineno << endl;
+    exit(1);
 }

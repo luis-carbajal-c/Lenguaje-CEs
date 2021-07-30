@@ -53,8 +53,7 @@ number  {digit}+
 {id}        {yylval.id_val = new std::string(yytext); return ID;}
 
 .           {
-                //printf("Error en la linea %i. Caracter '%s' invalido\n", yylineno, YYText());
-                char* error = (char *) "lexic error";
+                char* error = (char *) "Lexic error";
                 yyerror(error);
                 exit(1);
             }
