@@ -6,7 +6,7 @@
     extern "C" int yylex();
 
     enum IDType {
-        func,
+        fun,
         var
     };
 
@@ -29,25 +29,45 @@
     };
 
     struct SymbolTable {
-        stack<map<string, attr> > tables;
+        vector<map<string, attr> > tables;
 
         SymbolTable() {
-            tables.push(map<string, attr>());
+            tables.push_back(map<string, attr>());
+        }
+
+        map<string, attr>& current() {
+            return tables[tables.size() - 1];
         }
 
         void insert_symbol(string id, attr val) {
-            map<string, attr> &current = tables.top();
-            current.insert(pair<string, attr>(id, val));
+            map<string, attr> &curr = current();
+            curr.insert(pair<string, attr>(id, val));
         }
 
-        bool search_symbol(string id) {
-            map<string, attr> &current = tables.top();
-            return current.find(id) != current.end();
+        bool search_symbol_local(string id) {
+            map<string, attr> &curr = current();
+            return curr.find(id) != curr.end();
+        }
+
+        bool search_symbol_global(string id) {
+            for (int i = 0; i < tables.size(); i++) {
+                if (tables[i].find(id) != tables[i].end())
+                    return true;
+            }
+            return false;
         }
 
         void update_symbol(string id, attr new_val) {
-            map<string, attr> &current = tables.top();
-            current[id] = new_val;
+            map<string, attr> &curr = current();
+            curr[id] = new_val;
+        }
+
+        void add_scope() {
+            tables.push_back(map<string, attr>());
+        }
+
+        void remove_scope() {
+            tables.pop_back();
         }
     };
 
@@ -68,8 +88,6 @@
 %token <op_val>     MIENTRAS
 %token <op_val>     SI
 %token <op_val>     SINO
-//%token <op_val>     MAIN
-//"main"      {yylval.op_val = new std::string(yytext); return MAIN;}
 
 %token <op_val>     SUM
 %token <op_val>     SUB
@@ -96,6 +114,10 @@
 %token <int_val>    NUM
 %token <id_val>     ID
 
+%type <id_val> declaracion
+%type <id_val> var_declaracion
+%type <id_val> fun_declaracion
+
 //%left PLUS
 //%left MULT
 
@@ -106,18 +128,24 @@ programa:
     ;
 
 lista_declaracion:  
-    lista_declaracion declaracion
-    | declaracion
+    declaracion lista_declaracion
+    | declaracion {
+        if (*$1 != "main") {
+            error_symbol("Last program declaration should be main function", *$1);
+        }
+    }
     ;
 
 declaracion:
-    var_declaracion
-    | fun_declaracion
+    var_declaracion {$$ = $1;}
+    | fun_declaracion {$$ = $1;}
     ;
 
 var_declaracion:
     ENTERO ID EOS {
-        if (!symbolTable.search_symbol(*$2)) {
+        $$ = $2;
+        if (*$2 == "main") error_symbol("Keyword reserved for main function declaration", *$2);
+        if (!symbolTable.search_symbol_local(*$2)) {
             attr a;
             a.idtype = var;
             a.vtype = simple;
@@ -126,7 +154,9 @@ var_declaracion:
         else error_symbol("Symbol already defined", *$2);
     }
     | ENTERO ID COR_BEG NUM COR_END EOS {
-        if (!symbolTable.search_symbol(*$2)) {
+        $$ = $2;
+        if (*$2 == "main") error_symbol("Keyword reserved for main function declaration", *$2);
+        if (!symbolTable.search_symbol_local(*$2)) {
             attr a;
             a.idtype = var;
             a.vtype = arreglo;
@@ -137,21 +167,32 @@ var_declaracion:
     }
     ;
 
-/*
-tipo:
-    ENTERO
-    | SIN_TIPO
-    ;
-*/
-
 fun_declaracion:
-    ENTERO ID PAR_BEG params PAR_END sent_compuesta
-    | SIN_TIPO ID PAR_BEG params PAR_END sent_compuesta
+    ENTERO ID PAR_BEG params PAR_END sent_compuesta {
+        $$ = $2;
+        if (!symbolTable.search_symbol_local(*$2)) {
+            attr a;
+            a.idtype = fun;
+            a.ftype = entero;
+            symbolTable.insert_symbol(*$2, a);
+        }
+        else error_symbol("Symbol already defined", *$2);
+    }
+    | SIN_TIPO ID PAR_BEG params PAR_END sent_compuesta {
+        $$ = $2;
+        if (!symbolTable.search_symbol_local(*$2)) {
+            attr a;
+            a.idtype = fun;
+            a.ftype = sin_tipo;
+            symbolTable.insert_symbol(*$2, a);
+        }
+        else error_symbol("Symbol already defined", *$2);
+    }
     ;
 
 params:
-    lista_params
-    | SIN_TIPO
+    lista_params {cout << "params" << endl;}
+    | SIN_TIPO {cout << "params" << endl;}
     ;
 
 lista_params:
@@ -165,7 +206,7 @@ param:
     ;
 
 sent_compuesta:
-    LLA_BEG declaracion_local lista_sentencias LLA_END
+    LLA_BEG declaracion_local lista_sentencias LLA_END 
     ;
 
 declaracion_local:
@@ -200,8 +241,8 @@ sentencia_iteracion:
     ;
 
 sentencia_retorno:
-    RETORNO EOS
-    | RETORNO expresion EOS
+    RETORNO EOS {cout << "retorno" << endl;}
+    | RETORNO expresion EOS {cout << "retorno" << endl;}
     ;
 
 expresion:

@@ -3,6 +3,7 @@ de
 prueba*/
 
 entero temp;
+entero tempp;
 
 sin_tipo factorial(entero x) {
     entero fact;
@@ -19,9 +20,11 @@ sin_tipo factorial(entero x) {
     retorno fact;
 }
 
+entero temppp;
+
 entero main(sin_tipo) {
     entero prueba;              /*declaracion de variable*/
-    entero fact;
+    entero factt; /*Cambiar a fact para probar ambitos*/
     entero arreglo[4];
 
     arreglo[0] = 10;
@@ -30,4 +33,8 @@ entero main(sin_tipo) {
     retorno 0;                  /*retorno de la funcion*/
 }
 
-~ /*caracter invalido, error lexico*/
+sin_tipo main(sin_tipo) {
+    retorno;
+}
+
+/*~ caracter invalido, error lexico*/
