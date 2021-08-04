@@ -191,8 +191,8 @@ fun_declaracion:
     ;
 
 params:
-    lista_params {cout << "params" << endl;}
-    | SIN_TIPO {cout << "params" << endl;}
+    lista_params {symbolTable.add_scope();}
+    | SIN_TIPO {symbolTable.add_scope();}
     ;
 
 lista_params:
@@ -201,8 +201,27 @@ lista_params:
     ;
 
 param:
-    ENTERO ID
-    | ENTERO ID COR_BEG COR_END
+    ENTERO ID {
+        if (*$2 == "main") error_symbol("Keyword reserved for main function declaration", *$2);
+        if (!symbolTable.search_symbol_local(*$2)) {
+            attr a;
+            a.idtype = var;
+            a.vtype = simple;
+            symbolTable.insert_symbol(*$2, a);
+        }
+        else error_symbol("Symbol already defined as parameter", *$2);
+    }
+    | ENTERO ID COR_BEG COR_END {
+        if (*$2 == "main") error_symbol("Keyword reserved for main function declaration", *$2);
+        if (!symbolTable.search_symbol_local(*$2)) {
+            attr a;
+            a.idtype = var;
+            a.vtype = arreglo;
+            a.asize = -1;
+            symbolTable.insert_symbol(*$2, a);
+        }
+        else error_symbol("Symbol already defined as parameter", *$2);
+    }
     ;
 
 sent_compuesta:
@@ -241,8 +260,8 @@ sentencia_iteracion:
     ;
 
 sentencia_retorno:
-    RETORNO EOS {cout << "retorno" << endl;}
-    | RETORNO expresion EOS {cout << "retorno" << endl;}
+    RETORNO EOS {symbolTable.remove_scope();}
+    | RETORNO expresion EOS {symbolTable.remove_scope();}
     ;
 
 expresion:

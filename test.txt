@@ -7,8 +7,6 @@ entero tempp;
 
 sin_tipo factorial(entero x) {
     entero fact;
-    si (x <= 0) retorno;
-
     fact = 1;
     fact = fact * x;
     x = x - 1;
@@ -20,7 +18,9 @@ sin_tipo factorial(entero x) {
     retorno fact;
 }
 
-entero temppp;
+sin_tipo test(entero paramA, entero paramB []) {
+    retorno;
+}
 
 entero main(sin_tipo) {
     entero prueba;              /*declaracion de variable*/
@@ -31,10 +31,6 @@ entero main(sin_tipo) {
     prueba = 5;                 /*asignacion de valor a la variable*/
     fact = factorial(prueba);   /*llamada a funcion*/
     retorno 0;                  /*retorno de la funcion*/
-}
-
-sin_tipo main(sin_tipo) {
-    retorno;
 }
 
 /*~ caracter invalido, error lexico*/

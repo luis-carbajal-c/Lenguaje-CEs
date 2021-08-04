@@ -1,0 +1,1262 @@
+State 101 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: programa $end
+
+    1 programa: lista_declaracion
+
+    2 lista_declaracion: declaracion lista_declaracion
+    3                  | declaracion
+
+    4 declaracion: var_declaracion
+    5            | fun_declaracion
+
+    6 var_declaracion: ENTERO ID EOS
+    7                | ENTERO ID COR_BEG NUM COR_END EOS
+
+    8 fun_declaracion: ENTERO ID PAR_BEG params PAR_END sent_compuesta
+    9                | SIN_TIPO ID PAR_BEG params PAR_END sent_compuesta
+
+   10 params: lista_params
+   11       | SIN_TIPO
+
+   12 lista_params: lista_params COMMA param
+   13             | param
+
+   14 param: ENTERO ID
+   15      | ENTERO ID COR_BEG COR_END
+
+   16 sent_compuesta: LLA_BEG declaracion_local lista_sentencias LLA_END
+
+   17 declaracion_local: %empty
+   18                  | declaracion_local var_declaracion
+
+   19 lista_sentencias: %empty
+   20                 | lista_sentencias sentencia
+
+   21 sentencia: sentencia_expresion
+   22          | sentencia_seleccion
+   23          | sentencia_iteracion
+   24          | sentencia_retorno
+
+   25 sentencia_expresion: expresion EOS
+   26                    | EOS
+
+   27 sentencia_seleccion: SI PAR_BEG expresion PAR_END sentencia
+   28                    | SI PAR_BEG expresion PAR_END sentencia SINO sentencia
+
+   29 sentencia_iteracion: MIENTRAS PAR_BEG expresion PAR_END LLA_BEG lista_sentencias LLA_END
+
+   30 sentencia_retorno: RETORNO EOS
+   31                  | RETORNO expresion EOS
+
+   32 expresion: var ASSIGN expresion
+   33          | expresion_simple
+
+   34 var: ID
+   35    | ID COR_BEG expresion COR_END
+
+   36 expresion_simple: expresion_aditiva relop expresion_aditiva
+   37                 | expresion_aditiva
+
+   38 relop: LT
+   39      | LEQ
+   40      | GT
+   41      | GEQ
+   42      | EQ
+   43      | NEQ
+
+   44 expresion_aditiva: expresion_aditiva addop term
+   45                  | term
+
+   46 addop: SUM
+   47      | SUB
+
+   48 term: term mulop factor
+   49     | factor
+
+   50 mulop: MUL
+   51      | DIV
+
+   52 factor: PAR_BEG expresion PAR_END
+   53       | var
+   54       | call
+   55       | NUM
+
+   56 call: ID PAR_BEG args PAR_END
+
+   57 args: %empty
+   58     | lista_arg
+
+   59 lista_arg: lista_arg COMMA expresion
+   60          | expresion
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    ENTERO <op_val> (258) 6 7 8 14 15
+    SIN_TIPO <op_val> (259) 9 11
+    RETORNO <op_val> (260) 30 31
+    MIENTRAS <op_val> (261) 29
+    SI <op_val> (262) 27 28
+    SINO <op_val> (263) 28
+    SUM <op_val> (264) 46
+    SUB <op_val> (265) 47
+    MUL <op_val> (266) 50
+    DIV <op_val> (267) 51
+    LT <op_val> (268) 38
+    LEQ <op_val> (269) 39
+    GT <op_val> (270) 40
+    GEQ <op_val> (271) 41
+    EQ <op_val> (272) 42
+    NEQ <op_val> (273) 43
+    ASSIGN <op_val> (274) 32
+    PAR_BEG <op_val> (275) 8 9 27 28 29 52 56
+    PAR_END <op_val> (276) 8 9 27 28 29 52 56
+    COR_BEG <op_val> (277) 7 15 35
+    COR_END <op_val> (278) 7 15 35
+    LLA_BEG <op_val> (279) 16 29
+    LLA_END <op_val> (280) 16 29
+    COMMA <op_val> (281) 12 59
+    EOS <op_val> (282) 6 7 25 26 30 31
+    NUM <int_val> (283) 7 55
+    ID <id_val> (284) 6 7 8 9 14 15 34 35 56
+
+
+Nonterminals, with rules where they appear
+
+    $accept (30)
+        on left: 0
+    programa (31)
+        on left: 1
+        on right: 0
+    lista_declaracion (32)
+        on left: 2 3
+        on right: 1 2
+    declaracion <id_val> (33)
+        on left: 4 5
+        on right: 2 3
+    var_declaracion <id_val> (34)
+        on left: 6 7
+        on right: 4 18
+    fun_declaracion <id_val> (35)
+        on left: 8 9
+        on right: 5
+    params (36)
+        on left: 10 11
+        on right: 8 9
+    lista_params (37)
+        on left: 12 13
+        on right: 10 12
+    param (38)
+        on left: 14 15
+        on right: 12 13
+    sent_compuesta (39)
+        on left: 16
+        on right: 8 9
+    declaracion_local (40)
+        on left: 17 18
+        on right: 16 18
+    lista_sentencias (41)
+        on left: 19 20
+        on right: 16 20 29
+    sentencia (42)
+        on left: 21 22 23 24
+        on right: 20 27 28
+    sentencia_expresion (43)
+        on left: 25 26
+        on right: 21
+    sentencia_seleccion (44)
+        on left: 27 28
+        on right: 22
+    sentencia_iteracion (45)
+        on left: 29
+        on right: 23
+    sentencia_retorno (46)
+        on left: 30 31
+        on right: 24
+    expresion (47)
+        on left: 32 33
+        on right: 25 27 28 29 31 32 35 52 59 60
+    var (48)
+        on left: 34 35
+        on right: 32 53
+    expresion_simple (49)
+        on left: 36 37
+        on right: 33
+    relop (50)
+        on left: 38 39 40 41 42 43
+        on right: 36
+    expresion_aditiva (51)
+        on left: 44 45
+        on right: 36 37 44
+    addop (52)
+        on left: 46 47
+        on right: 44
+    term (53)
+        on left: 48 49
+        on right: 44 45 48
+    mulop (54)
+        on left: 50 51
+        on right: 48
+    factor (55)
+        on left: 52 53 54 55
+        on right: 48 49
+    call (56)
+        on left: 56
+        on right: 54
+    args (57)
+        on left: 57 58
+        on right: 56
+    lista_arg (58)
+        on left: 59 60
+        on right: 58 59
+
+
+State 0
+
+    0 $accept: . programa $end
+
+    ENTERO    shift, and go to state 1
+    SIN_TIPO  shift, and go to state 2
+
+    programa           go to state 3
+    lista_declaracion  go to state 4
+    declaracion        go to state 5
+    var_declaracion    go to state 6
+    fun_declaracion    go to state 7
+
+
+State 1
+
+    6 var_declaracion: ENTERO . ID EOS
+    7                | ENTERO . ID COR_BEG NUM COR_END EOS
+    8 fun_declaracion: ENTERO . ID PAR_BEG params PAR_END sent_compuesta
+
+    ID  shift, and go to state 8
+
+
+State 2
+
+    9 fun_declaracion: SIN_TIPO . ID PAR_BEG params PAR_END sent_compuesta
+
+    ID  shift, and go to state 9
+
+
+State 3
+
+    0 $accept: programa . $end
+
+    $end  shift, and go to state 10
+
+
+State 4
+
+    1 programa: lista_declaracion .
+
+    $default  reduce using rule 1 (programa)
+
+
+State 5
+
+    2 lista_declaracion: declaracion . lista_declaracion
+    3                  | declaracion .
+
+    ENTERO    shift, and go to state 1
+    SIN_TIPO  shift, and go to state 2
+
+    $default  reduce using rule 3 (lista_declaracion)
+
+    lista_declaracion  go to state 11
+    declaracion        go to state 5
+    var_declaracion    go to state 6
+    fun_declaracion    go to state 7
+
+
+State 6
+
+    4 declaracion: var_declaracion .
+
+    $default  reduce using rule 4 (declaracion)
+
+
+State 7
+
+    5 declaracion: fun_declaracion .
+
+    $default  reduce using rule 5 (declaracion)
+
+
+State 8
+
+    6 var_declaracion: ENTERO ID . EOS
+    7                | ENTERO ID . COR_BEG NUM COR_END EOS
+    8 fun_declaracion: ENTERO ID . PAR_BEG params PAR_END sent_compuesta
+
+    PAR_BEG  shift, and go to state 12
+    COR_BEG  shift, and go to state 13
+    EOS      shift, and go to state 14
+
+
+State 9
+
+    9 fun_declaracion: SIN_TIPO ID . PAR_BEG params PAR_END sent_compuesta
+
+    PAR_BEG  shift, and go to state 15
+
+
+State 10
+
+    0 $accept: programa $end .
+
+    $default  accept
+
+
+State 11
+
+    2 lista_declaracion: declaracion lista_declaracion .
+
+    $default  reduce using rule 2 (lista_declaracion)
+
+
+State 12
+
+    8 fun_declaracion: ENTERO ID PAR_BEG . params PAR_END sent_compuesta
+
+    ENTERO    shift, and go to state 16
+    SIN_TIPO  shift, and go to state 17
+
+    params        go to state 18
+    lista_params  go to state 19
+    param         go to state 20
+
+
+State 13
+
+    7 var_declaracion: ENTERO ID COR_BEG . NUM COR_END EOS
+
+    NUM  shift, and go to state 21
+
+
+State 14
+
+    6 var_declaracion: ENTERO ID EOS .
+
+    $default  reduce using rule 6 (var_declaracion)
+
+
+State 15
+
+    9 fun_declaracion: SIN_TIPO ID PAR_BEG . params PAR_END sent_compuesta
+
+    ENTERO    shift, and go to state 16
+    SIN_TIPO  shift, and go to state 17
+
+    params        go to state 22
+    lista_params  go to state 19
+    param         go to state 20
+
+
+State 16
+
+   14 param: ENTERO . ID
+   15      | ENTERO . ID COR_BEG COR_END
+
+    ID  shift, and go to state 23
+
+
+State 17
+
+   11 params: SIN_TIPO .
+
+    $default  reduce using rule 11 (params)
+
+
+State 18
+
+    8 fun_declaracion: ENTERO ID PAR_BEG params . PAR_END sent_compuesta
+
+    PAR_END  shift, and go to state 24
+
+
+State 19
+
+   10 params: lista_params .
+   12 lista_params: lista_params . COMMA param
+
+    COMMA  shift, and go to state 25
+
+    $default  reduce using rule 10 (params)
+
+
+State 20
+
+   13 lista_params: param .
+
+    $default  reduce using rule 13 (lista_params)
+
+
+State 21
+
+    7 var_declaracion: ENTERO ID COR_BEG NUM . COR_END EOS
+
+    COR_END  shift, and go to state 26
+
+
+State 22
+
+    9 fun_declaracion: SIN_TIPO ID PAR_BEG params . PAR_END sent_compuesta
+
+    PAR_END  shift, and go to state 27
+
+
+State 23
+
+   14 param: ENTERO ID .
+   15      | ENTERO ID . COR_BEG COR_END
+
+    COR_BEG  shift, and go to state 28
+
+    $default  reduce using rule 14 (param)
+
+
+State 24
+
+    8 fun_declaracion: ENTERO ID PAR_BEG params PAR_END . sent_compuesta
+
+    LLA_BEG  shift, and go to state 29
+
+    sent_compuesta  go to state 30
+
+
+State 25
+
+   12 lista_params: lista_params COMMA . param
+
+    ENTERO  shift, and go to state 16
+
+    param  go to state 31
+
+
+State 26
+
+    7 var_declaracion: ENTERO ID COR_BEG NUM COR_END . EOS
+
+    EOS  shift, and go to state 32
+
+
+State 27
+
+    9 fun_declaracion: SIN_TIPO ID PAR_BEG params PAR_END . sent_compuesta
+
+    LLA_BEG  shift, and go to state 29
+
+    sent_compuesta  go to state 33
+
+
+State 28
+
+   15 param: ENTERO ID COR_BEG . COR_END
+
+    COR_END  shift, and go to state 34
+
+
+State 29
+
+   16 sent_compuesta: LLA_BEG . declaracion_local lista_sentencias LLA_END
+
+    $default  reduce using rule 17 (declaracion_local)
+
+    declaracion_local  go to state 35
+
+
+State 30
+
+    8 fun_declaracion: ENTERO ID PAR_BEG params PAR_END sent_compuesta .
+
+    $default  reduce using rule 8 (fun_declaracion)
+
+
+State 31
+
+   12 lista_params: lista_params COMMA param .
+
+    $default  reduce using rule 12 (lista_params)
+
+
+State 32
+
+    7 var_declaracion: ENTERO ID COR_BEG NUM COR_END EOS .
+
+    $default  reduce using rule 7 (var_declaracion)
+
+
+State 33
+
+    9 fun_declaracion: SIN_TIPO ID PAR_BEG params PAR_END sent_compuesta .
+
+    $default  reduce using rule 9 (fun_declaracion)
+
+
+State 34
+
+   15 param: ENTERO ID COR_BEG COR_END .
+
+    $default  reduce using rule 15 (param)
+
+
+State 35
+
+   16 sent_compuesta: LLA_BEG declaracion_local . lista_sentencias LLA_END
+   18 declaracion_local: declaracion_local . var_declaracion
+
+    ENTERO  shift, and go to state 36
+
+    $default  reduce using rule 19 (lista_sentencias)
+
+    var_declaracion   go to state 37
+    lista_sentencias  go to state 38
+
+
+State 36
+
+    6 var_declaracion: ENTERO . ID EOS
+    7                | ENTERO . ID COR_BEG NUM COR_END EOS
+
+    ID  shift, and go to state 39
+
+
+State 37
+
+   18 declaracion_local: declaracion_local var_declaracion .
+
+    $default  reduce using rule 18 (declaracion_local)
+
+
+State 38
+
+   16 sent_compuesta: LLA_BEG declaracion_local lista_sentencias . LLA_END
+   20 lista_sentencias: lista_sentencias . sentencia
+
+    RETORNO   shift, and go to state 40
+    MIENTRAS  shift, and go to state 41
+    SI        shift, and go to state 42
+    PAR_BEG   shift, and go to state 43
+    LLA_END   shift, and go to state 44
+    EOS       shift, and go to state 45
+    NUM       shift, and go to state 46
+    ID        shift, and go to state 47
+
+    sentencia            go to state 48
+    sentencia_expresion  go to state 49
+    sentencia_seleccion  go to state 50
+    sentencia_iteracion  go to state 51
+    sentencia_retorno    go to state 52
+    expresion            go to state 53
+    var                  go to state 54
+    expresion_simple     go to state 55
+    expresion_aditiva    go to state 56
+    term                 go to state 57
+    factor               go to state 58
+    call                 go to state 59
+
+
+State 39
+
+    6 var_declaracion: ENTERO ID . EOS
+    7                | ENTERO ID . COR_BEG NUM COR_END EOS
+
+    COR_BEG  shift, and go to state 13
+    EOS      shift, and go to state 14
+
+
+State 40
+
+   30 sentencia_retorno: RETORNO . EOS
+   31                  | RETORNO . expresion EOS
+
+    PAR_BEG  shift, and go to state 43
+    EOS      shift, and go to state 60
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    expresion          go to state 61
+    var                go to state 54
+    expresion_simple   go to state 55
+    expresion_aditiva  go to state 56
+    term               go to state 57
+    factor             go to state 58
+    call               go to state 59
+
+
+State 41
+
+   29 sentencia_iteracion: MIENTRAS . PAR_BEG expresion PAR_END LLA_BEG lista_sentencias LLA_END
+
+    PAR_BEG  shift, and go to state 62
+
+
+State 42
+
+   27 sentencia_seleccion: SI . PAR_BEG expresion PAR_END sentencia
+   28                    | SI . PAR_BEG expresion PAR_END sentencia SINO sentencia
+
+    PAR_BEG  shift, and go to state 63
+
+
+State 43
+
+   52 factor: PAR_BEG . expresion PAR_END
+
+    PAR_BEG  shift, and go to state 43
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    expresion          go to state 64
+    var                go to state 54
+    expresion_simple   go to state 55
+    expresion_aditiva  go to state 56
+    term               go to state 57
+    factor             go to state 58
+    call               go to state 59
+
+
+State 44
+
+   16 sent_compuesta: LLA_BEG declaracion_local lista_sentencias LLA_END .
+
+    $default  reduce using rule 16 (sent_compuesta)
+
+
+State 45
+
+   26 sentencia_expresion: EOS .
+
+    $default  reduce using rule 26 (sentencia_expresion)
+
+
+State 46
+
+   55 factor: NUM .
+
+    $default  reduce using rule 55 (factor)
+
+
+State 47
+
+   34 var: ID .
+   35    | ID . COR_BEG expresion COR_END
+   56 call: ID . PAR_BEG args PAR_END
+
+    PAR_BEG  shift, and go to state 65
+    COR_BEG  shift, and go to state 66
+
+    $default  reduce using rule 34 (var)
+
+
+State 48
+
+   20 lista_sentencias: lista_sentencias sentencia .
+
+    $default  reduce using rule 20 (lista_sentencias)
+
+
+State 49
+
+   21 sentencia: sentencia_expresion .
+
+    $default  reduce using rule 21 (sentencia)
+
+
+State 50
+
+   22 sentencia: sentencia_seleccion .
+
+    $default  reduce using rule 22 (sentencia)
+
+
+State 51
+
+   23 sentencia: sentencia_iteracion .
+
+    $default  reduce using rule 23 (sentencia)
+
+
+State 52
+
+   24 sentencia: sentencia_retorno .
+
+    $default  reduce using rule 24 (sentencia)
+
+
+State 53
+
+   25 sentencia_expresion: expresion . EOS
+
+    EOS  shift, and go to state 67
+
+
+State 54
+
+   32 expresion: var . ASSIGN expresion
+   53 factor: var .
+
+    ASSIGN  shift, and go to state 68
+
+    $default  reduce using rule 53 (factor)
+
+
+State 55
+
+   33 expresion: expresion_simple .
+
+    $default  reduce using rule 33 (expresion)
+
+
+State 56
+
+   36 expresion_simple: expresion_aditiva . relop expresion_aditiva
+   37                 | expresion_aditiva .
+   44 expresion_aditiva: expresion_aditiva . addop term
+
+    SUM  shift, and go to state 69
+    SUB  shift, and go to state 70
+    LT   shift, and go to state 71
+    LEQ  shift, and go to state 72
+    GT   shift, and go to state 73
+    GEQ  shift, and go to state 74
+    EQ   shift, and go to state 75
+    NEQ  shift, and go to state 76
+
+    $default  reduce using rule 37 (expresion_simple)
+
+    relop  go to state 77
+    addop  go to state 78
+
+
+State 57
+
+   45 expresion_aditiva: term .
+   48 term: term . mulop factor
+
+    MUL  shift, and go to state 79
+    DIV  shift, and go to state 80
+
+    $default  reduce using rule 45 (expresion_aditiva)
+
+    mulop  go to state 81
+
+
+State 58
+
+   49 term: factor .
+
+    $default  reduce using rule 49 (term)
+
+
+State 59
+
+   54 factor: call .
+
+    $default  reduce using rule 54 (factor)
+
+
+State 60
+
+   30 sentencia_retorno: RETORNO EOS .
+
+    $default  reduce using rule 30 (sentencia_retorno)
+
+
+State 61
+
+   31 sentencia_retorno: RETORNO expresion . EOS
+
+    EOS  shift, and go to state 82
+
+
+State 62
+
+   29 sentencia_iteracion: MIENTRAS PAR_BEG . expresion PAR_END LLA_BEG lista_sentencias LLA_END
+
+    PAR_BEG  shift, and go to state 43
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    expresion          go to state 83
+    var                go to state 54
+    expresion_simple   go to state 55
+    expresion_aditiva  go to state 56
+    term               go to state 57
+    factor             go to state 58
+    call               go to state 59
+
+
+State 63
+
+   27 sentencia_seleccion: SI PAR_BEG . expresion PAR_END sentencia
+   28                    | SI PAR_BEG . expresion PAR_END sentencia SINO sentencia
+
+    PAR_BEG  shift, and go to state 43
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    expresion          go to state 84
+    var                go to state 54
+    expresion_simple   go to state 55
+    expresion_aditiva  go to state 56
+    term               go to state 57
+    factor             go to state 58
+    call               go to state 59
+
+
+State 64
+
+   52 factor: PAR_BEG expresion . PAR_END
+
+    PAR_END  shift, and go to state 85
+
+
+State 65
+
+   56 call: ID PAR_BEG . args PAR_END
+
+    PAR_BEG  shift, and go to state 43
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    $default  reduce using rule 57 (args)
+
+    expresion          go to state 86
+    var                go to state 54
+    expresion_simple   go to state 55
+    expresion_aditiva  go to state 56
+    term               go to state 57
+    factor             go to state 58
+    call               go to state 59
+    args               go to state 87
+    lista_arg          go to state 88
+
+
+State 66
+
+   35 var: ID COR_BEG . expresion COR_END
+
+    PAR_BEG  shift, and go to state 43
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    expresion          go to state 89
+    var                go to state 54
+    expresion_simple   go to state 55
+    expresion_aditiva  go to state 56
+    term               go to state 57
+    factor             go to state 58
+    call               go to state 59
+
+
+State 67
+
+   25 sentencia_expresion: expresion EOS .
+
+    $default  reduce using rule 25 (sentencia_expresion)
+
+
+State 68
+
+   32 expresion: var ASSIGN . expresion
+
+    PAR_BEG  shift, and go to state 43
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    expresion          go to state 90
+    var                go to state 54
+    expresion_simple   go to state 55
+    expresion_aditiva  go to state 56
+    term               go to state 57
+    factor             go to state 58
+    call               go to state 59
+
+
+State 69
+
+   46 addop: SUM .
+
+    $default  reduce using rule 46 (addop)
+
+
+State 70
+
+   47 addop: SUB .
+
+    $default  reduce using rule 47 (addop)
+
+
+State 71
+
+   38 relop: LT .
+
+    $default  reduce using rule 38 (relop)
+
+
+State 72
+
+   39 relop: LEQ .
+
+    $default  reduce using rule 39 (relop)
+
+
+State 73
+
+   40 relop: GT .
+
+    $default  reduce using rule 40 (relop)
+
+
+State 74
+
+   41 relop: GEQ .
+
+    $default  reduce using rule 41 (relop)
+
+
+State 75
+
+   42 relop: EQ .
+
+    $default  reduce using rule 42 (relop)
+
+
+State 76
+
+   43 relop: NEQ .
+
+    $default  reduce using rule 43 (relop)
+
+
+State 77
+
+   36 expresion_simple: expresion_aditiva relop . expresion_aditiva
+
+    PAR_BEG  shift, and go to state 43
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    var                go to state 91
+    expresion_aditiva  go to state 92
+    term               go to state 57
+    factor             go to state 58
+    call               go to state 59
+
+
+State 78
+
+   44 expresion_aditiva: expresion_aditiva addop . term
+
+    PAR_BEG  shift, and go to state 43
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    var     go to state 91
+    term    go to state 93
+    factor  go to state 58
+    call    go to state 59
+
+
+State 79
+
+   50 mulop: MUL .
+
+    $default  reduce using rule 50 (mulop)
+
+
+State 80
+
+   51 mulop: DIV .
+
+    $default  reduce using rule 51 (mulop)
+
+
+State 81
+
+   48 term: term mulop . factor
+
+    PAR_BEG  shift, and go to state 43
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    var     go to state 91
+    factor  go to state 94
+    call    go to state 59
+
+
+State 82
+
+   31 sentencia_retorno: RETORNO expresion EOS .
+
+    $default  reduce using rule 31 (sentencia_retorno)
+
+
+State 83
+
+   29 sentencia_iteracion: MIENTRAS PAR_BEG expresion . PAR_END LLA_BEG lista_sentencias LLA_END
+
+    PAR_END  shift, and go to state 95
+
+
+State 84
+
+   27 sentencia_seleccion: SI PAR_BEG expresion . PAR_END sentencia
+   28                    | SI PAR_BEG expresion . PAR_END sentencia SINO sentencia
+
+    PAR_END  shift, and go to state 96
+
+
+State 85
+
+   52 factor: PAR_BEG expresion PAR_END .
+
+    $default  reduce using rule 52 (factor)
+
+
+State 86
+
+   60 lista_arg: expresion .
+
+    $default  reduce using rule 60 (lista_arg)
+
+
+State 87
+
+   56 call: ID PAR_BEG args . PAR_END
+
+    PAR_END  shift, and go to state 97
+
+
+State 88
+
+   58 args: lista_arg .
+   59 lista_arg: lista_arg . COMMA expresion
+
+    COMMA  shift, and go to state 98
+
+    $default  reduce using rule 58 (args)
+
+
+State 89
+
+   35 var: ID COR_BEG expresion . COR_END
+
+    COR_END  shift, and go to state 99
+
+
+State 90
+
+   32 expresion: var ASSIGN expresion .
+
+    $default  reduce using rule 32 (expresion)
+
+
+State 91
+
+   53 factor: var .
+
+    $default  reduce using rule 53 (factor)
+
+
+State 92
+
+   36 expresion_simple: expresion_aditiva relop expresion_aditiva .
+   44 expresion_aditiva: expresion_aditiva . addop term
+
+    SUM  shift, and go to state 69
+    SUB  shift, and go to state 70
+
+    $default  reduce using rule 36 (expresion_simple)
+
+    addop  go to state 78
+
+
+State 93
+
+   44 expresion_aditiva: expresion_aditiva addop term .
+   48 term: term . mulop factor
+
+    MUL  shift, and go to state 79
+    DIV  shift, and go to state 80
+
+    $default  reduce using rule 44 (expresion_aditiva)
+
+    mulop  go to state 81
+
+
+State 94
+
+   48 term: term mulop factor .
+
+    $default  reduce using rule 48 (term)
+
+
+State 95
+
+   29 sentencia_iteracion: MIENTRAS PAR_BEG expresion PAR_END . LLA_BEG lista_sentencias LLA_END
+
+    LLA_BEG  shift, and go to state 100
+
+
+State 96
+
+   27 sentencia_seleccion: SI PAR_BEG expresion PAR_END . sentencia
+   28                    | SI PAR_BEG expresion PAR_END . sentencia SINO sentencia
+
+    RETORNO   shift, and go to state 40
+    MIENTRAS  shift, and go to state 41
+    SI        shift, and go to state 42
+    PAR_BEG   shift, and go to state 43
+    EOS       shift, and go to state 45
+    NUM       shift, and go to state 46
+    ID        shift, and go to state 47
+
+    sentencia            go to state 101
+    sentencia_expresion  go to state 49
+    sentencia_seleccion  go to state 50
+    sentencia_iteracion  go to state 51
+    sentencia_retorno    go to state 52
+    expresion            go to state 53
+    var                  go to state 54
+    expresion_simple     go to state 55
+    expresion_aditiva    go to state 56
+    term                 go to state 57
+    factor               go to state 58
+    call                 go to state 59
+
+
+State 97
+
+   56 call: ID PAR_BEG args PAR_END .
+
+    $default  reduce using rule 56 (call)
+
+
+State 98
+
+   59 lista_arg: lista_arg COMMA . expresion
+
+    PAR_BEG  shift, and go to state 43
+    NUM      shift, and go to state 46
+    ID       shift, and go to state 47
+
+    expresion          go to state 102
+    var                go to state 54
+    expresion_simple   go to state 55
+    expresion_aditiva  go to state 56
+    term               go to state 57
+    factor             go to state 58
+    call               go to state 59
+
+
+State 99
+
+   35 var: ID COR_BEG expresion COR_END .
+
+    $default  reduce using rule 35 (var)
+
+
+State 100
+
+   29 sentencia_iteracion: MIENTRAS PAR_BEG expresion PAR_END LLA_BEG . lista_sentencias LLA_END
+
+    $default  reduce using rule 19 (lista_sentencias)
+
+    lista_sentencias  go to state 103
+
+
+State 101
+
+   27 sentencia_seleccion: SI PAR_BEG expresion PAR_END sentencia .
+   28                    | SI PAR_BEG expresion PAR_END sentencia . SINO sentencia
+
+    SINO  shift, and go to state 104
+
+    SINO      [reduce using rule 27 (sentencia_seleccion)]
+    $default  reduce using rule 27 (sentencia_seleccion)
+
+
+State 102
+
+   59 lista_arg: lista_arg COMMA expresion .
+
+    $default  reduce using rule 59 (lista_arg)
+
+
+State 103
+
+   20 lista_sentencias: lista_sentencias . sentencia
+   29 sentencia_iteracion: MIENTRAS PAR_BEG expresion PAR_END LLA_BEG lista_sentencias . LLA_END
+
+    RETORNO   shift, and go to state 40
+    MIENTRAS  shift, and go to state 41
+    SI        shift, and go to state 42
+    PAR_BEG   shift, and go to state 43
+    LLA_END   shift, and go to state 105
+    EOS       shift, and go to state 45
+    NUM       shift, and go to state 46
+    ID        shift, and go to state 47
+
+    sentencia            go to state 48
+    sentencia_expresion  go to state 49
+    sentencia_seleccion  go to state 50
+    sentencia_iteracion  go to state 51
+    sentencia_retorno    go to state 52
+    expresion            go to state 53
+    var                  go to state 54
+    expresion_simple     go to state 55
+    expresion_aditiva    go to state 56
+    term                 go to state 57
+    factor               go to state 58
+    call                 go to state 59
+
+
+State 104
+
+   28 sentencia_seleccion: SI PAR_BEG expresion PAR_END sentencia SINO . sentencia
+
+    RETORNO   shift, and go to state 40
+    MIENTRAS  shift, and go to state 41
+    SI        shift, and go to state 42
+    PAR_BEG   shift, and go to state 43
+    EOS       shift, and go to state 45
+    NUM       shift, and go to state 46
+    ID        shift, and go to state 47
+
+    sentencia            go to state 106
+    sentencia_expresion  go to state 49
+    sentencia_seleccion  go to state 50
+    sentencia_iteracion  go to state 51
+    sentencia_retorno    go to state 52
+    expresion            go to state 53
+    var                  go to state 54
+    expresion_simple     go to state 55
+    expresion_aditiva    go to state 56
+    term                 go to state 57
+    factor               go to state 58
+    call                 go to state 59
+
+
+State 105
+
+   29 sentencia_iteracion: MIENTRAS PAR_BEG expresion PAR_END LLA_BEG lista_sentencias LLA_END .
+
+    $default  reduce using rule 29 (sentencia_iteracion)
+
+
+State 106
+
+   28 sentencia_seleccion: SI PAR_BEG expresion PAR_END sentencia SINO sentencia .
+
+    $default  reduce using rule 28 (sentencia_seleccion)
